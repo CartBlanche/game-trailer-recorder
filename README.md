@@ -19,7 +19,24 @@ Nothing in the recording or edit side knows it is filming a game. It starts a pr
 
 ## Requirements
 
-OBS 28 or later with the WebSocket server on; `OBS_PASSWORD` exported in your shell (never stored by these scripts); ffmpeg and ffprobe; Python 3.9 or later (standard library only); Chrome for the title card; the OBS scene transitions you ask for (a fresh OBS has Cut and Fade; add others in OBS's Scene Transitions dock with the + button); a game you can build with a dev switch and that can run several copies side by side. Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent; Windows and Linux are untested, and other engines need their own harness (the contract is engine independent).
+- OBS 28 or later (install notes below) with the WebSocket server on, and `OBS_PASSWORD` exported in your shell (never stored by these scripts).
+- The OBS scene transitions you ask for. A fresh OBS has Cut and Fade; add others in OBS's Scene Transitions dock with the + button.
+- ffmpeg and ffprobe (install notes below).
+- Python 3.9 or later (standard library only).
+- Chrome, for the title card.
+- A game you can build with a dev switch, and that can run several copies side by side.
+- Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent. Windows and Linux are untested.
+- Other engines need their own harness (the contract is engine independent).
+
+### Installing OBS
+
+| System | Command |
+|---|---|
+| macOS | `brew install --cask obs` |
+| Windows | `winget install -e --id OBSProject.OBSStudio` |
+| Linux | `flatpak install flathub com.obsproject.Studio` |
+
+Installers: https://obsproject.com. Then enable the WebSocket server (Tools > WebSocket Server Settings: turn on the server and authentication, set a password, press Apply; the default port is 4455) and export that password as `OBS_PASSWORD`.
 
 ### Installing ffmpeg (and ffprobe, which comes with it)
 
@@ -31,7 +48,7 @@ OBS 28 or later with the WebSocket server on; `OBS_PASSWORD` exported in your sh
 | Fedora | `sudo dnf install ffmpeg` (enable RPM Fusion first if it is not found) |
 | Arch | `sudo pacman -S ffmpeg` |
 
-Check it with `ffmpeg -version` and `ffprobe -version`; the build needs H.264 (`libx264`), which these packages include. Python 3 and Chrome (`CHROME=<path>` if it is not found) are installed the usual way. OBS: https://obsproject.com (on Linux also `flatpak install flathub com.obsproject.Studio`). Windows and Linux are untested, and `record.py` currently uses `pkill` and the config's `launch` often starts with `caffeinate` (both macOS or Unix tools), so expect to adapt those first.
+Check it with `ffmpeg -version` and `ffprobe -version`; the build needs H.264 (`libx264`), which these packages include. Python 3 and Chrome (`CHROME=<path>` if it is not found) are installed the usual way. `record.py` currently uses `pkill` and the config's `launch` often starts with `caffeinate` (both macOS or Unix tools), so on Windows or Linux expect to adapt those first.
 
 ## Quick start
 
