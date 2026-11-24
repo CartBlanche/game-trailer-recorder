@@ -6,14 +6,14 @@
   "build": "<path to Unity>/Unity.app/Contents/MacOS/Unity -batchMode -quit -projectPath . -buildTarget StandaloneOSX -executeMethod TrailerBuild.Build -logFile video/build.log",
   "launch": "caffeinate -d -i Builds/FPSMicrogameTrailer.app/Contents/MacOS/FPSMicrogameTrailer -logFile -",
   "kill_pattern": "[F]PSMicrogameTrailer.app",
-  "max_seconds": 120,
+  "max_seconds": 240,
   "settle_seconds": 4,
   "pre_roll": 1.5,
   "title_bar_crop": 64,
   "release_file": "go",
   "env": {
     "TRAILER_SEED": "7",
-    "TRAILER_SHOWSECONDS": "30",
+    "TRAILER_SHOWSECONDS": "150",
     "TRAILER_QUITAFTER": "12",
     "TRAILER_SCALE": "2"
   },
@@ -33,7 +33,7 @@
     },
     {
       "wait": "Hero:show-end",
-      "timeout": 100
+      "timeout": 220
     }
   ],
   "transition": {

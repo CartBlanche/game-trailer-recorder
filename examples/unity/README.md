@@ -1,8 +1,8 @@
 # Example: Unity, a one-window first person shooter
 
-This is the setup used for the real trailer of the Unity FPS Microgame (the Unity 6 first person shooter template), recorded on macOS as a standalone player. It is the one-window case: no joining players, one copy of the game that plays itself for about 30 seconds.
+This is the setup used for the real trailer of the Unity FPS Microgame (the Unity 6 first person shooter template), recorded on macOS as a standalone player. It is the one-window case: no joining players, one copy of the game that plays itself from the menu until the level is won (about 25 seconds of play in this small level).
 
-The story: the main menu, Play is pressed, the hero fights through the level (an AI pilot walks the navmesh, aims, fires in pulses, is invincible), kills the hover bot, then steps out of cover, draws the turret's fire, ducks behind cover and steps out again. The edit opens with a "COMING UP..." card and a 2.8 s teaser of the cover moment (centred on the `cover-peek` cue the game prints), cuts the level-load wait, and ends with the "Directed by ..." credits card over the fading game sound.
+The story: the main menu, Play is pressed, the hero fights through the level (an AI pilot walks the navmesh, aims, fires in pulses, is invincible), kills the hover bot, steps out of cover, draws the turret's fire, ducks behind cover and steps out again, then destroys the turret so the game shows "All objectives completed". The edit opens with a "COMING UP..." card and a 2.8 s teaser of the cover moment (centred on the `cover-peek` cue the game prints), cuts the level-load wait, and ends with the "Directed by ..." credits card over the fading game sound.
 
 ## Files
 

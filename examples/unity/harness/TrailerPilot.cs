@@ -40,7 +40,7 @@ namespace Unity.FPS.Gameplay
         Vector3 m_LastGood; bool m_HaveGood;
         float m_FloorMin = -1000f;
         int m_NavVerts;
-        bool m_Switched;
+        bool m_Switched, m_BeatDoneSeen;
 
         void Start()
         {
@@ -130,13 +130,36 @@ namespace Unity.FPS.Gameplay
             {
                 if (a == null || a == m_Self || a.Affiliation == m_Self.Affiliation) continue;
                 if (m_Ignore.TryGetValue(a, out float until) && Time.time < until) continue;
-                float score = Vector3.Distance(transform.position, a.transform.position);
-                // first the mobile enemy (the kill), from 16 s on the turret (the cover beat)
+                float score = PathLength(a.transform.position);
+                // until the cover beat is done: first the mobile enemy (the kill), from 16 s on the turret (the beat)
                 bool turret = a.name.Contains("Turret");
-                if (turret == (Time.time - m_Born < 16f)) score += 1000f;
+                if (m_Beat != Beat.Done && turret == (Time.time - m_Born < 16f)) score += 1000f;
                 if (score < bestScore) { bestScore = score; best = a; }
             }
+            if (best == null && m_Ignore.Count > 0)
+            {
+                m_Ignore.Clear();   // everything was given up on: try again, nearest first
+                foreach (var a in mgr.Actors)
+                {
+                    if (a == null || a == m_Self || a.Affiliation == m_Self.Affiliation) continue;
+                    float score = PathLength(a.transform.position);
+                    if (score < bestScore) { bestScore = score; best = a; }
+                }
+            }
             if (best != m_Target) { m_Target = best; m_TargetSince = Time.time; m_LastSeen = Time.time; m_NextPath = 0; }
+        }
+
+        // walking distance over the navmesh (straight distance plus a penalty when there is no path)
+        float PathLength(Vector3 to)
+        {
+            Vector3 from = NavMesh.SamplePosition(transform.position, out var a, 3f, NavMesh.AllAreas) ? a.position : transform.position;
+            Vector3 dest = NavMesh.SamplePosition(to, out var b, 6f, NavMesh.AllAreas) ? b.position : to;
+            var p = new NavMeshPath();
+            if (!NavMesh.CalculatePath(from, dest, NavMesh.AllAreas, p) || p.status == NavMeshPathStatus.PathInvalid || p.corners.Length < 2)
+                return Vector3.Distance(transform.position, to) + 500f;
+            float len = 0f;
+            for (int i = 1; i < p.corners.Length; i++) len += Vector3.Distance(p.corners[i - 1], p.corners[i]);
+            return p.status == NavMeshPathStatus.PathPartial ? len + 250f : len;
         }
 
         int EnemiesLeft()
@@ -158,6 +181,7 @@ namespace Unity.FPS.Gameplay
             m_Health.CurrentHealth = m_Health.MaxHealth;
 
             if (!m_Switched && Time.time - m_Born >= 16f) { m_Switched = true; m_Target = null; }
+            if (!m_BeatDoneSeen && m_Beat == Beat.Done) { m_BeatDoneSeen = true; m_Target = null; }
             if (m_Target == null || m_Target.gameObject == null || !m_Target.isActiveAndEnabled
                 || (Time.time - m_LastSeen > 14f && Time.time - m_TargetSince > 14f))
             {
@@ -247,10 +271,10 @@ namespace Unity.FPS.Gameplay
             m_FireCycle += dt;
             bool pulse = (m_FireCycle % 0.55f) < 0.28f;
             // never kill the last enemy: its death would end the level (win scene) in the middle of the show
-            if (m_Target != null && (EnemiesLeft() <= 1 || m_Target.name.Contains("Turret")))
+            if (m_Target != null && m_Beat != Beat.Done && m_Target.name.Contains("Turret"))
             {
                 var th = m_Target.GetComponent<Health>();
-                if (th != null && th.GetRatio() < 0.35f) fireOk = false;   // keep the turret (and the last enemy) alive
+                if (th != null && th.GetRatio() < 0.35f) fireOk = false;   // keep the turret alive until the cover beat is done
             }
             TrailerInput.Fire = fireOk && pulse;
 

@@ -90,33 +90,36 @@ namespace Unity.FPS.Gameplay
             TrailerInput.Active = true;
             var pilot = player.gameObject.AddComponent<TrailerPilot>();
             EventManager.AddListener<EnemyKillEvent>(OnKill);
+            EventManager.AddListener<AllObjectivesCompletedEvent>(OnComplete);
             Cue("gameplay-start");
-            float show = float.Parse(Env("TRAILER_SHOWSECONDS", "40"), System.Globalization.CultureInfo.InvariantCulture);
+            float show = float.Parse(Env("TRAILER_SHOWSECONDS", "150"), System.Globalization.CultureInfo.InvariantCulture);
             float quitAfter = float.Parse(Env("TRAILER_QUITAFTER", "12"), System.Globalization.CultureInfo.InvariantCulture);
             string shots = Env("TRAILER_SHOTDIR");
             float t0 = Time.realtimeSinceStartup, nextShot = 2f;
 
-            // unconditional time cap; a win or lose scene also ends the show
-            while (Time.realtimeSinceStartup - t0 < show && SceneManager.GetActiveScene().name == "MainScene")
+            // the show is the whole level: it ends when the game announces that all objectives are completed.
+            // Unconditional time cap (TRAILER_SHOWSECONDS, 150 s): then it is a failed take.
+            while (!m_Complete && Time.realtimeSinceStartup - t0 < show && SceneManager.GetActiveScene().name != "LoseScene")
             {
                 if (!string.IsNullOrEmpty(shots) && Time.realtimeSinceStartup - t0 > nextShot)
                 {
                     Directory.CreateDirectory(shots);
                     ScreenCapture.CaptureScreenshot(Path.Combine(shots, "shot-" + Mathf.RoundToInt(nextShot).ToString("D3") + ".png"));
-                    nextShot += 4f;
+                    nextShot += 6f;
                 }
                 yield return null;
             }
             string endScene = SceneManager.GetActiveScene().name;
-            Console.Out.WriteLine("[trailer] show ends in scene " + endScene + " after " + (Time.realtimeSinceStartup - t0) + " s");
-            if (endScene != "MainScene")
+            Console.Out.WriteLine("[trailer] show ends in scene " + endScene + " after " + (Time.realtimeSinceStartup - t0) + " s, complete " + m_Complete);
+            if (!m_Complete)
             {
-                // a lose or win scene before the cap: a failed take. No show-end cue, so it is plain to see.
+                // lose scene or the time cap: a failed take. No show-end cue, so it is plain to see.
                 Cue("failed");
                 yield return new WaitForSeconds(3f);
                 Application.Quit();
                 yield break;
             }
+            yield return new WaitForSeconds(3f);   // the "objectives completed" message is on screen
             Cue("show-end");
             if (!string.IsNullOrEmpty(shots)) ScreenCapture.CaptureScreenshot(Path.Combine(shots, "shot-end.png"));
             // keep playing so the sound can fade under the credits card, then quit by ourselves
@@ -125,6 +128,8 @@ namespace Unity.FPS.Gameplay
             Application.Quit();
         }
 
+        bool m_Complete;
+        void OnComplete(AllObjectivesCompletedEvent e) { if (m_Complete) return; m_Complete = true; Cue("objectives-complete"); }
         int m_Kills;
         void OnKill(EnemyKillEvent e) { m_Kills++; Cue("kill"); }
     }
