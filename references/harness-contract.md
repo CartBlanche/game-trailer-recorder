@@ -6,7 +6,7 @@ Items are marked **required** or **if you have it** (a menu, multiplayer, a scor
 
 ## 1. Input: environment variables
 
-Names are yours (Vector Rumble uses a `VR_` prefix). You need these kinds of setting, passed per copy through `trailer.json`:
+Names are yours (the examples use a `TRAILER_` prefix). You need these kinds of setting, passed per copy through `trailer.json`:
 
 - **Identity** (if you have players): the player name, ship/character/colour, so four copies look different.
 - **Window** (required): position and size from one string (e.g. "x,y,w,h"). Size it to the final video size in POINTS (if the game draws a fixed canvas of another shape, such as 800x480, it is letterboxed inside the window: accept the black bars, or make the window the canvas shape, or add a dev-only layout for 16:9): a window smaller than 1920x1080 pixels once scaled looks soft. On a Retina Mac with a game that is not HiDPI aware, back-buffer pixels equal window points, so 1280x720 points captured at 2x is sharp enough for 1080p. Print the real back buffer size at start so you know.

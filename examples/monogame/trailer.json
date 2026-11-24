@@ -13,26 +13,26 @@
   "transition": {"name": "Cut"},
 
   "env": {
-    "VR_CLEANSETTINGS": "1",
-    "VR_ALLAI": "1",
-    "VR_AI": "3",
-    "VR_SEED": "3",
-    "VR_SKY": "0",
-    "VR_FIREWORKS": "1",
-    "VR_SCORELIMIT": "5"
+    "TRAILER_CLEANSETTINGS": "1",
+    "TRAILER_ALLAI": "1",
+    "TRAILER_AI": "3",
+    "TRAILER_SEED": "3",
+    "TRAILER_SKY": "0",
+    "TRAILER_FIREWORKS": "1",
+    "TRAILER_SCORELIMIT": "5"
   },
 
   "instances": [
     {"name": "John", "window": "0,790,1280,720", "ready_cue": "browser-open",
-     "env": {"VR_NAME": "{name}", "VR_WIN": "{window}", "VR_OPEN": "browse", "VR_GOFILE": "{work}/go-John", "VR_SHIP": "4", "VR_COLOUR": "2", "VR_DEMOHOP": "1"}},
+     "env": {"TRAILER_NAME": "{name}", "TRAILER_WIN": "{window}", "TRAILER_OPEN": "browse", "TRAILER_GOFILE": "{work}/go-John", "TRAILER_SHIP": "4", "TRAILER_COLOUR": "2", "TRAILER_DEMOHOP": "1"}},
     {"name": "Jane", "window": "430,790,1280,720", "ready_cue": "browser-open",
-     "env": {"VR_NAME": "{name}", "VR_WIN": "{window}", "VR_OPEN": "browse", "VR_GOFILE": "{work}/go-Jane", "VR_SHIP": "0", "VR_COLOUR": "3"}},
+     "env": {"TRAILER_NAME": "{name}", "TRAILER_WIN": "{window}", "TRAILER_OPEN": "browse", "TRAILER_GOFILE": "{work}/go-Jane", "TRAILER_SHIP": "0", "TRAILER_COLOUR": "3"}},
     {"name": "Alison", "window": "860,790,1280,720", "ready_cue": "browser-open",
-     "env": {"VR_NAME": "{name}", "VR_WIN": "{window}", "VR_OPEN": "browse", "VR_GOFILE": "{work}/go-Alison", "VR_SHIP": "2", "VR_COLOUR": "4", "VR_DEMOHOP": "1"}},
+     "env": {"TRAILER_NAME": "{name}", "TRAILER_WIN": "{window}", "TRAILER_OPEN": "browse", "TRAILER_GOFILE": "{work}/go-Alison", "TRAILER_SHIP": "2", "TRAILER_COLOUR": "4", "TRAILER_DEMOHOP": "1"}},
     {"name": "Alex", "window": "0,30,1280,720",
-     "env": {"VR_NAME": "{name}", "VR_WIN": "{window}", "VR_OPEN": "main", "VR_PICK": ",,2",
-             "VR_TOUR": "Play,Multiplayer,Host a game", "VR_TOURFILE": "{work}/tour", "VR_TOURSTART": "0.6", "VR_RULESHOLD": "1.2",
-             "VR_STARTFILE": "{work}/start", "VR_QUITAFTEROVER": "9", "VR_ENDAFTER": "420", "VR_SHIP": "1", "VR_COLOUR": "1", "VR_SKYNAMES": "1"}}
+     "env": {"TRAILER_NAME": "{name}", "TRAILER_WIN": "{window}", "TRAILER_OPEN": "main", "TRAILER_PICK": ",,2",
+             "TRAILER_TOUR": "Play,Multiplayer,Host a game", "TRAILER_TOURFILE": "{work}/tour", "TRAILER_TOURSTART": "0.6", "TRAILER_RULESHOLD": "1.2",
+             "TRAILER_STARTFILE": "{work}/start", "TRAILER_QUITAFTEROVER": "9", "TRAILER_ENDAFTER": "420", "TRAILER_SHIP": "1", "TRAILER_COLOUR": "1", "TRAILER_SKYNAMES": "1"}}
   ],
 
   "story": [

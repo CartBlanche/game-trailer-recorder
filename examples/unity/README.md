@@ -13,7 +13,7 @@ The story: the main menu, Play is pressed, the hero fights through the level (an
 - [`TrailerInput.cs`](harness/TrailerInput.cs), [`TrailerHarness.cs`](harness/TrailerHarness.cs), [`TrailerPilot.cs`](harness/TrailerPilot.cs): the dev-only autopilot, all inside `#if TRAILER`, in the game's own assembly (the project uses assembly definitions, so the hook has to live there).
 - [`harness/PlayerInputHandler.patch`](harness/PlayerInputHandler.patch): the five small `#if TRAILER` blocks that make the game's input class read the autopilot instead of the keyboard and mouse.
 
-These are tied to this project (its scenes, enemy and turret classes, its input class). Use them as a model for how a Unity harness fits together, not as drop-in code; [`references/other-engines.md`](../../references/other-engines.md) explains the rules behind each part.
+These are tied to this project (its scenes, enemy and turret classes, its input class). Use them as a model for how a Unity harness fits together, not as drop-in code; [`references/unity.md`](../../references/unity.md) explains the rules behind each part.
 
 ## What to know
 

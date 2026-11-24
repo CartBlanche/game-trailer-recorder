@@ -13,8 +13,8 @@ Nothing in the recording or edit side knows it is filming a game. It starts a pr
 - [`scripts/record.py`](scripts/record.py): builds and starts the game copies in the right order, drives OBS, follows a story of cuts, stops cleanly (watchdog, Ctrl-C safe, restores your OBS scene).
 - [`scripts/edit.py`](scripts/edit.py): cuts a dead wait, adds a title card, a teaser and an optional credits card ("Directed by ...") from the cue times, outputs 1080p 60 fps H.264.
 - [`scripts/obs.py`](scripts/obs.py): a standard-library OBS WebSocket v5 client with `bind-all`, `cut`, `clean` and friends.
-- [`references/`](references/): the harness contract (what your game must do), every config key, pitfalls that cost real takes, and a C# MonoGame example.
-- [`examples/monogame/`](examples/monogame/): a real config for a four-player pretend LAN match (Vector Rumble). [The trailer it made](https://www.youtube.com/watch?v=2u5Ls6-l_-A).
+- [`references/`](references/): the harness contract (what your game must do), every config key, pitfalls that cost real takes, a MonoGame and a Unity harness explained, and an untested Godot sketch.
+- [`examples/monogame/`](examples/monogame/): a real config for a four-player pretend LAN match (Vector Rumble), with the harness code. [The trailer it made](https://www.youtube.com/watch?v=2u5Ls6-l_-A).
 - [`examples/unity/`](examples/unity/): a one-window setup for a Unity first person shooter, with the harness code. [The trailer it made](https://www.youtube.com/watch?v=RauPj0VTOPQ).
 
 ## Requirements
@@ -52,7 +52,7 @@ Check it with `ffmpeg -version` and `ffprobe -version`; the build needs H.264 (`
 
 ## Quick start
 
-1. Add a dev-only harness to your game (see [`references/harness-contract.md`](references/harness-contract.md); [`references/monogame-example.md`](references/monogame-example.md) has C# code).
+1. Add a dev-only harness to your game (see [`references/harness-contract.md`](references/harness-contract.md); [`references/monogame-example.md`](references/monogame-example.md) and [`references/unity.md`](references/unity.md) explain two real harnesses, with the code in [`examples/`](examples/)).
 2. Write a `trailer.json` (start from [`examples/`](examples/), keys in [`references/config.md`](references/config.md)).
 3. Dry run, no OBS needed: `python3 -I scripts/record.py trailer.json --work video/dry --cap 60`
 4. Record: `python3 -I scripts/record.py trailer.json --obs`
@@ -72,7 +72,7 @@ Check it with `ffmpeg -version` and `ffprobe -version`; the build needs H.264 (`
 
 ## Other engines
 
-The scripts do not care what engine the game uses; only the in-game autopilot is engine specific. See [`references/other-engines.md`](references/other-engines.md): a Unity section from a real attempt, and an untested Godot sketch.
+The scripts do not care what engine the game uses; only the in-game autopilot is engine specific. See [`references/unity.md`](references/unity.md) for a Unity harness that ran end to end, and [`references/other-engines.md`](references/other-engines.md) for an untested Godot sketch.
 
 ## Status
 

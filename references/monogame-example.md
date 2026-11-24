@@ -1,6 +1,6 @@
 # The contract in a MonoGame game (from Vector Rumble)
 
-Vector Rumble's harness is one file, `Core/DevShots.cs`, compiled in only with `dotnet build -c Release -p:DevShots=true` (the project defines a `DEVSHOT` symbol when that property is set; the whole file sits inside `#if DEVSHOT`). Hooks into the game are a few `#if DEVSHOT` lines. The same pattern works in any C# game; other engines need their own version of it.
+Vector Rumble's harness is one file, [`DevShots.cs`](../examples/monogame/harness/DevShots.cs) (`Core/DevShots.cs` in the game), compiled in only with `dotnet build -c Release -p:DevShots=true` (the project defines a `DEVSHOT` symbol when that property is set; the whole file sits inside `#if DEVSHOT`). Hooks into the game are a few `#if DEVSHOT` lines. The same pattern works in any C# game; other engines need their own version of it.
 
 ## Compile switch (csproj)
 
@@ -10,41 +10,6 @@ Put the define in the project that holds the game class. A game split into a Cor
 <PropertyGroup Condition="'$(DevShots)' == 'true'">
   <DefineConstants>$(DefineConstants);DEVSHOT</DefineConstants>
 </PropertyGroup>
-```
-
-## Sketch
-
-```csharp
-#if DEVSHOT
-static class DevShots
-{
-    // 1. environment in
-    static string Env(string name) => Environment.GetEnvironmentVariable(name);
-
-    // 2. cue lines out: one per story beat, wall-clock milliseconds, flushed
-    public static void Cue(string name)
-    {
-        long ms = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        Console.WriteLine($"[DEVSHOT] cue {name} unix-ms {ms}");
-        Console.Out.Flush();
-    }
-
-    // 3. window from "x,y,w,h": set before the first frame
-    public static void ApplyWindow(Game game, GraphicsDeviceManager graphics)
-    {
-        var parts = (Env("VR_WIN") ?? "").Split(',');
-        if (parts.Length != 4) return;
-        graphics.PreferredBackBufferWidth = int.Parse(parts[2]);
-        graphics.PreferredBackBufferHeight = int.Parse(parts[3]);
-        graphics.ApplyChanges();
-        game.Window.Position = new Point(int.Parse(parts[0]), int.Parse(parts[1]));
-        Console.WriteLine($"[DEVSHOT] back buffer {graphics.PreferredBackBufferWidth}x{graphics.PreferredBackBufferHeight}");
-    }
-
-    // 4. signal files: poll once per frame in Update; act when one appears
-    public static bool Signalled(string envName) { var p = Env(envName); return p != null && File.Exists(p); }
-}
-#endif
 ```
 
 ## The autopilot as a script (from a second game, a two-player LAN artillery game)
@@ -94,10 +59,10 @@ Also in the dev build: force the game to act as focused and set `InactiveSleepTi
 
 ## What Vector Rumble's harness does, for reference
 
-- Opens on a chosen screen (`VR_OPEN`: main menu or the Multiplayer browser) and walks a list of menu items (`VR_TOUR="Play,Multiplayer,Host a game"`) by calling the menu screen's own select methods through reflection, highlight first and press after, with the menu's own sound cue played for each step (otherwise the scripted walk is silent).
-- Waits for `VR_TOURFILE` before starting the walk (the release file), `VR_GOFILE` before a joiner presses Join, `VR_STARTFILE` before the host presses Start.
-- AI flies every ship (`VR_ALLAI`), seed and level fixed (`VR_SEED`, `VR_PICK`), ends the match at `VR_SCORELIMIT` kills, quits `VR_QUITAFTEROVER` seconds after game over and at `VR_ENDAFTER` seconds regardless.
-- `VR_CLEANSETTINGS` ignores the saved settings file and turns the idle pause off.
-- Dev-only polish: a bigger, coloured player name in the heading, brighter background labels (`VR_SKYNAMES`), and AI pilots hopping just before a shot arrives (`VR_DEMOHOP`) to show the hop move.
+- Opens on a chosen screen (`TRAILER_OPEN`: main menu or the Multiplayer browser) and walks a list of menu items (`TRAILER_TOUR="Play,Multiplayer,Host a game"`) by calling the menu screen's own select methods through reflection, highlight first and press after, with the menu's own sound cue played for each step (otherwise the scripted walk is silent).
+- Waits for `TRAILER_TOURFILE` before starting the walk (the release file), `TRAILER_GOFILE` before a joiner presses Join, `TRAILER_STARTFILE` before the host presses Start.
+- AI flies every ship (`TRAILER_ALLAI`), seed and level fixed (`TRAILER_SEED`, `TRAILER_PICK`), ends the match at `TRAILER_SCORELIMIT` kills, quits `TRAILER_QUITAFTEROVER` seconds after game over and at `TRAILER_ENDAFTER` seconds regardless.
+- `TRAILER_CLEANSETTINGS` ignores the saved settings file and turns the idle pause off.
+- Dev-only polish: a bigger, coloured player name in the heading, brighter background labels (`TRAILER_SKYNAMES`), and AI pilots hopping just before a shot arrives (`TRAILER_DEMOHOP`) to show the hop move.
 
 Pitfalls that hit this harness: stereo menu sounds not playing for scripted presses, an idle "Paused" screen, window size smaller than the video, and a non-host copy's setting not reaching the match (the host's arena choice had to be copied into the lobby rules).
