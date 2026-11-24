@@ -46,6 +46,7 @@ class Run:
         self.stop = threading.Event()
         self.missed = []
         self.prev_scene = None
+        self.prev_transition = None      # (name, duration in ms) that OBS had before this run changed it
         self.rec_started = None
         self.obs = None
         self.names = [i["name"] for i in cfg["instances"]]
@@ -138,6 +139,13 @@ class Run:
             self.watchdog.cancel()
         self.stop_recording()
         self.kill_games()
+        if self.obs and self.prev_transition:
+            try:
+                self.obs.request("SetCurrentSceneTransition", {"transitionName": self.prev_transition[0]})
+                if self.prev_transition[1] is not None:
+                    self.obs.request("SetCurrentSceneTransitionDuration", {"transitionDuration": self.prev_transition[1]})
+            except (RuntimeError, OSError):
+                pass
         if self.obs and self.prev_scene:
             try:
                 self.obs.request("SetCurrentProgramScene", {"sceneName": self.prev_scene})
@@ -198,6 +206,16 @@ class Run:
             self.obs = obsmod.Obs(os.environ.get("OBS_HOST", "localhost"), int(os.environ.get("OBS_PORT", "4455")),
                                   os.environ["OBS_PASSWORD"])
             self.prev_scene = self.obs.request("GetSceneList").get("currentProgramSceneName")   # put back when the take is over
+            tr = cfg.get("transition")
+            if tr:     # how OBS changes between the scenes (the cuts); put back afterwards
+                cur = self.obs.request("GetCurrentSceneTransition")
+                self.prev_transition = (cur["transitionName"], None if cur.get("transitionFixed") else cur.get("transitionDuration"))
+                names = [t["transitionName"] for t in self.obs.request("GetSceneTransitionList")["transitions"]]
+                if tr.get("name") not in names:
+                    die("OBS has no transition named %r (it has: %s)" % (tr.get("name"), ", ".join(names)))
+                self.obs.request("SetCurrentSceneTransition", {"transitionName": tr["name"]})
+                if "duration_ms" in tr and tr["name"] != "Cut":
+                    self.obs.request("SetCurrentSceneTransitionDuration", {"transitionDuration": int(tr["duration_ms"])})
             # fail early, and never touch a recording somebody else started
             if self.obs.request("GetRecordStatus")["outputActive"]:
                 die("OBS is already recording: stop that first (this script only stops a recording it started)")

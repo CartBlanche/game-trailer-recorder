@@ -11,6 +11,7 @@
   stop               stop recording, prints the file it wrote
   folder [path]      show or set the recording folder
   windows            list the windows OBS can capture (to check the name your game's window has)
+  transitions        list OBS's scene transitions (record.py sets one with the config "transition")
   bind-all <names>   one scene per name, each showing one game window, filling the canvas. Name them in the order the games were
                      STARTED: the windows are matched by window id, and the first game started has the lowest id.
   cut <name>         switch to that name's scene
@@ -271,6 +272,10 @@ def main(argv):
             if not rest:
                 raise RuntimeError("bind-all needs the names, in the order the games were started")
             bind_all(obs, rest)
+        elif cmd == "transitions":
+            lst = obs.request("GetSceneTransitionList")
+            for t in lst["transitions"]:
+                print("%s%s" % (t["transitionName"], "   (current)" if t["transitionName"] == lst["currentSceneTransitionName"] else ""))
         elif cmd == "cut":
             obs.request("SetCurrentProgramScene", {"sceneName": scene_of(rest[0])})
         elif cmd == "clean":

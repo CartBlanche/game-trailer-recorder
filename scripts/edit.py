@@ -4,7 +4,7 @@
   edit.py <trailer.json> <recording> [--kill-at S] [--out FILE] [--card TEXT | --no-card] [--no-cut]
 
   <recording>   the file OBS wrote (also on the "recording_file=" line of <work_dir>/timing.txt)
-  --kill-at S   the second of the recording where the best moment happens (a "kill"): the video opens with a short clip leading
+  --kill-at S   (or edit.teaser.cue in the config: a cue to centre on) the second of the recording where the best moment happens (a "kill"): the video opens with a short clip leading
                 up to it, as a teaser. Without it there is no teaser, and the loudest sounds after the story's end cue are listed,
                 so you can look at the frames around them (ffmpeg -ss T -i FILE -frames:v 1 x.png) and pick one.
   --card TEXT   the title card shown before the teaser (default from the config, "COMING UP..."); --no-card leaves it out
@@ -91,6 +91,14 @@ def main(argv):
             a_cut = (max(starts) if s.get("pick", "last") == "last" else min(starts)) + s.get("offset", 0.0)
             b_cut = end_time + e.get("offset", 0.0)
     duration = float(probe("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", rec_file))
+
+    tzc = ed.get("teaser", {}).get("cue")
+    if kill_at is None and tzc:     # the teaser is centred on a cue the game printed (for example the hero peeking out of cover)
+        hits = cues(tzc["player"]).get(tzc["cue"], [])
+        if not hits:
+            sys.exit("No %r cue in %s.log for the teaser" % (tzc["cue"], tzc["player"]))
+        kill_at = hits[0] + float(tzc.get("offset", 0.0))
+        print("Teaser centred on the %r cue at %.2f s" % (tzc["cue"], kill_at))
 
     if kill_at is None:
         pcm = subprocess.check_output(["ffmpeg", "-v", "error", "-i", rec_file, "-vn", "-ac", "1", "-ar", "8000", "-f", "s16le", "-"])

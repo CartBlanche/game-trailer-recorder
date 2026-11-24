@@ -23,6 +23,7 @@ All paths are relative to where you run the scripts (the project root). `{work}`
 | `env` | environment variables for every copy |
 | `instances` | the copies, in LAUNCH order, host last (see below) |
 | `story` | the director's script (see below) |
+| `transition` | how OBS changes between the scenes: `{"name": "Cut"}` or `{"name": "Fade", "duration_ms": 300}`. The name must be one of OBS's transitions (`obs.py transitions` lists them). Left out, OBS keeps whatever transition it has set. It is put back after the take |
 | `edit` | settings for `edit.py` (see below) |
 
 ## instances
@@ -77,6 +78,8 @@ A list of steps, run in order after the recording has started and the release fi
 - `cut`: removes the dead wait. `start`: `{"cue", "players", "pick": "last"|"first", "offset"}`, the cut begins at that cue time (the last of those players' cues) plus the offset. `end`: `{"player", "cue", "offset"}`, the cut ends at that cue time plus the offset (a negative offset keeps the press sound and stops just before a loading screen). The sound is joined with an 80 ms crossfade.
 
 - `credits`: a closing (or opening) card of text lines, for example "Directed by ..." and "Implemented by ...". Keys: `directed_by` and `implemented_by` (each makes one line), or `lines` (a list, used as is, which also suits a studio name); `at` (`"end"`, the default, or `"start"`); `seconds` (default 4); `font`, `color`, `size` (default 64). At the end, `after` is `{"player", "cue", "hold"}`: the picture holds `hold` seconds (default 5) after that cue (use the game-over cue, so the scoreboard stays on screen), fades to black, and the card fades in while the game's own sound carries on underneath and fades out. Without `after` it starts `seconds` before the end of the recording. The recording must run on past `cue + hold + seconds`, so make the game keep running after the end (for example a quit-after-over delay of 9 s or more); `edit.py` stops with a message when the tail is too short. `implemented_by` is the agent's own name: the agent that made the trailer writes it in, and a trailer made by hand leaves it out.
+
+- `teaser`: `{"before": 2.55, "length": 3.3}` (seconds before the best moment, and the clip's length). The moment is `--kill-at S` on the command line, or `"cue": {"player", "cue", "offset"}` in the config to centre on a cue the game prints (good for a scripted moment, such as a hero ducking in and out of cover).
 
 A minimal `edit` for a one-window trailer: `{"card": false}`. Leave `cut` out when there is no dead wait to remove, and leave out `--kill-at` when you do not want a teaser (the script then lists the loudest sounds, which you can ignore).
 
