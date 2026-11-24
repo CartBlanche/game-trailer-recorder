@@ -1,4 +1,6 @@
-# Example: Unity, a one-window first person shooter
+# Example: Unity3D, a one-window first person shooter
+
+**The finished trailer:** https://www.youtube.com/watch?v=RauPj0VTOPQ
 
 This is the setup used for the real trailer of the Unity FPS Microgame (the Unity 6 first person shooter template), recorded on macOS as a standalone player. It is the one-window case: no joining players, one copy of the game that plays itself from the menu until the level is won (about 25 seconds of play in this small level).
 

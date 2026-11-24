@@ -23,7 +23,7 @@ All paths are relative to where you run the scripts (the project root). `{work}`
 | `env` | environment variables for every copy |
 | `instances` | the copies, in LAUNCH order, host last (see below) |
 | `story` | the director's script (see below) |
-| `transition` | how OBS changes between the scenes: `{"name": "Cut"}` or `{"name": "Fade", "duration_ms": 300}`. The name must be one of OBS's transitions (`obs.py transitions` lists them). Left out, OBS keeps whatever transition it has set. It is put back after the take |
+| `transition` | how OBS changes between the scenes: `{"name": "Cut"}` or `{"name": "Fade", "duration_ms": 300}`, or a LIST of these when the video uses several: the first is the default, and a story step can pick another with `{"cut": "Jane", "with": "Fade"}`. Every name must already exist in OBS (see "Transitions in OBS" in `SKILL.md`); `obs.py transitions` lists what OBS has. Left out, OBS keeps whatever transition it has set. OBS's own setting is put back after the take |
 | `edit` | settings for `edit.py` (see below) |
 
 ## instances

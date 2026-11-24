@@ -14,12 +14,24 @@ Nothing in the recording or edit side knows it is filming a game. It starts a pr
 - `scripts/edit.py`: cuts a dead wait, adds a title card, a teaser and an optional credits card ("Directed by ...") from the cue times, outputs 1080p 60 fps H.264.
 - `scripts/obs.py`: a standard-library OBS WebSocket v5 client with `bind-all`, `cut`, `clean` and friends.
 - `references/`: the harness contract (what your game must do), every config key, pitfalls that cost real takes, and a C# MonoGame example.
-- `examples/monogame/`: a real config for a four-player pretend LAN match (Vector Rumble).
-- `examples/unity/`: a one-window setup for a Unity first person shooter, with the harness code.
+- `examples/monogame/`: a real config for a four-player pretend LAN match (Vector Rumble). [The trailer it made](https://www.youtube.com/watch?v=2u5Ls6-l_-A).
+- `examples/unity/`: a one-window setup for a Unity first person shooter, with the harness code. [The trailer it made](https://www.youtube.com/watch?v=RauPj0VTOPQ).
 
 ## Requirements
 
-OBS 28 or later with the WebSocket server on; `OBS_PASSWORD` exported in your shell (never stored by these scripts); ffmpeg and ffprobe; Python 3.9 or later (standard library only); Chrome for the title card; a game you can build with a dev switch and that can run several copies side by side. Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent; Windows and Linux are untested, and other engines need their own harness (the contract is engine independent).
+OBS 28 or later with the WebSocket server on; `OBS_PASSWORD` exported in your shell (never stored by these scripts); ffmpeg and ffprobe; Python 3.9 or later (standard library only); Chrome for the title card; the OBS scene transitions you ask for (a fresh OBS has Cut and Fade; add others in OBS's Scene Transitions dock with the + button); a game you can build with a dev switch and that can run several copies side by side. Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent; Windows and Linux are untested, and other engines need their own harness (the contract is engine independent).
+
+### Installing ffmpeg (and ffprobe, which comes with it)
+
+| System | Command |
+|---|---|
+| macOS | `brew install ffmpeg` |
+| Windows | `winget install Gyan.FFmpeg` (or `choco install ffmpeg`, or `scoop install ffmpeg`); open a new terminal afterwards so `ffmpeg` is on the PATH |
+| Debian, Ubuntu | `sudo apt install ffmpeg` |
+| Fedora | `sudo dnf install ffmpeg` (enable RPM Fusion first if it is not found) |
+| Arch | `sudo pacman -S ffmpeg` |
+
+Check it with `ffmpeg -version` and `ffprobe -version`; the build needs H.264 (`libx264`), which these packages include. Python 3 and Chrome (`CHROME=<path>` if it is not found) are installed the usual way. OBS: https://obsproject.com (on Linux also `flatpak install flathub com.obsproject.Studio`). Windows and Linux are untested, and `record.py` currently uses `pkill` and the config's `launch` often starts with `caffeinate` (both macOS or Unix tools), so expect to adapt those first.
 
 ## Quick start
 

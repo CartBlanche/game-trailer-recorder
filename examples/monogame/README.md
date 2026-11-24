@@ -1,5 +1,7 @@
 # Example: MonoGame (C#), a four-player pretend LAN match
 
+**The finished trailer:** https://www.youtube.com/watch?v=2u5Ls6-l_-A
+
 This is the config used for the real trailer of Vector Rumble, a vector-graphics space shooter built with MonoGame (C#). The game's own dev harness is the model for `references/monogame-example.md`. Four copies of the game run on one Mac as four windows, each its own OBS scene.
 
 `trailer.json` here is that config.
