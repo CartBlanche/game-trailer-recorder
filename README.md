@@ -14,7 +14,8 @@ Nothing in the recording or edit side knows it is filming a game. It starts a pr
 - `scripts/edit.py`: cuts a dead wait, adds a title card, a teaser and an optional credits card ("Directed by ...") from the cue times, outputs 1080p 60 fps H.264.
 - `scripts/obs.py`: a standard-library OBS WebSocket v5 client with `bind-all`, `cut`, `clean` and friends.
 - `references/`: the harness contract (what your game must do), every config key, pitfalls that cost real takes, and a C# MonoGame example.
-- `examples/monogame/`: a real config for a four-player pretend LAN match.
+- `examples/monogame/`: a real config for a four-player pretend LAN match (Vector Rumble).
+- `examples/unity/`: a one-window setup for a Unity first person shooter, with the harness code.
 
 ## Requirements
 

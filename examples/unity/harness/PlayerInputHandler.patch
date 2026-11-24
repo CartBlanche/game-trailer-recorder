@@ -1,0 +1,52 @@
+--- a/Assets/FPS/Scripts/Gameplay/Managers/PlayerInputHandler.cs
++++ b/Assets/FPS/Scripts/Gameplay/Managers/PlayerInputHandler.cs
+@@ -74,6 +74,9 @@
+ 
+         public bool CanProcessInput()
+         {
++#if TRAILER
++            if (TrailerInput.Active) return !m_GameFlowManager.GameIsEnding;
++#endif
+             return Cursor.lockState == CursorLockMode.Locked && !m_GameFlowManager.GameIsEnding;
+         }
+ 
+@@ -82,6 +85,9 @@
+             if (CanProcessInput())
+             {
+                 var input = m_MoveAction.ReadValue<Vector2>();
++#if TRAILER
++                if (TrailerInput.Active) input = TrailerInput.Move;
++#endif
+                 Vector3 move = new Vector3(input.x, 0f, input.y);
+ 
+                 // constrain move input to a maximum magnitude of 1, otherwise diagonal movement might exceed the max move speed defined
+@@ -99,6 +105,9 @@
+                 return 0.0f;
+             
+             float input = m_LookAction.ReadValue<Vector2>().x;
++#if TRAILER
++            if (TrailerInput.Active) input = TrailerInput.LookX;
++#endif
+ 
+             if (InvertXAxis)
+                 input *= -1;
+@@ -119,6 +128,9 @@
+                 return 0.0f;
+             
+             float input = m_LookAction.ReadValue<Vector2>().y;
++#if TRAILER
++            if (TrailerInput.Active) input = TrailerInput.LookY;
++#endif
+ 
+             if (InvertYAxis)
+                 input *= -1;
+@@ -167,6 +179,9 @@
+         {
+             if (CanProcessInput())
+             {
++#if TRAILER
++                if (TrailerInput.Active) return TrailerInput.Fire;
++#endif
+                 return m_FireAction.IsPressed();
+             }
+ 

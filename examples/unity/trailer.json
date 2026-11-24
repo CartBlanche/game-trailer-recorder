@@ -1,0 +1,82 @@
+{
+  "name": "FPS Microgame hero showpiece",
+  "window_match": "FPSMicrogameTrailer",
+  "scene_prefix": "FPS Microgame",
+  "work_dir": "video",
+  "build": "<path to Unity>/Unity.app/Contents/MacOS/Unity -batchMode -quit -projectPath . -buildTarget StandaloneOSX -executeMethod TrailerBuild.Build -logFile video/build.log",
+  "launch": "caffeinate -d -i Builds/FPSMicrogameTrailer.app/Contents/MacOS/FPSMicrogameTrailer -logFile -",
+  "kill_pattern": "[F]PSMicrogameTrailer.app",
+  "max_seconds": 120,
+  "settle_seconds": 4,
+  "pre_roll": 1.5,
+  "title_bar_crop": 64,
+  "release_file": "go",
+  "env": {
+    "TRAILER_SEED": "7",
+    "TRAILER_SHOWSECONDS": "30",
+    "TRAILER_QUITAFTER": "12",
+    "TRAILER_SCALE": "2"
+  },
+  "instances": [
+    {
+      "name": "Hero",
+      "window": "0,30,1280,720",
+      "env": {
+        "TRAILER_WIN": "{window}",
+        "TRAILER_RELEASE": "{work}/go"
+      }
+    }
+  ],
+  "story": [
+    {
+      "cut": "Hero"
+    },
+    {
+      "wait": "Hero:show-end",
+      "timeout": 100
+    }
+  ],
+  "transition": {
+    "name": "Cut"
+  },
+  "edit": {
+    "card": {
+      "text": "COMING UP..."
+    },
+    "credits": {
+      "directed_by": "Dominique (SoftSavage) Louis",
+      "implemented_by": "Claude",
+      "at": "end",
+      "after": {
+        "player": "Hero",
+        "cue": "show-end",
+        "hold": 3.0
+      },
+      "seconds": 4
+    },
+    "teaser": {
+      "cue": {
+        "player": "Hero",
+        "cue": "cover-peek",
+        "offset": 0
+      },
+      "before": 1.2,
+      "length": 2.8
+    },
+    "cut": {
+      "start": {
+        "cue": "play-pressed",
+        "players": [
+          "Hero"
+        ],
+        "pick": "last",
+        "offset": 0.3
+      },
+      "end": {
+        "player": "Hero",
+        "cue": "gameplay-start",
+        "offset": 0.0
+      }
+    }
+  }
+}

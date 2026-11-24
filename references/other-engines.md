@@ -73,3 +73,12 @@ A cold build of a mid-sized project took about 4 minutes, an incremental one abo
 ## What to expect
 
 Most of the effort is the harness, as in the C# MonoGame examples: the menu walk, the release gate, signal files, the quit timer, and the cue lines. Use `monogame-example.md` as the shape of it (the wait-script is the same idea in every engine), and keep the rest of `harness-contract.md` as the checklist.
+
+### More Unity findings (second attempt, a recorded trailer; see `examples/unity/`)
+
+- Check Player Settings first: the project may already have Mac Retina support on. With it on, `Screen.SetResolution` takes PIXELS: asking for 1280x720 gave a 640x360 point window; ask for 2560x1440 to get a 1280x720 point window (the example uses a scale variable). The title bar of such a window is 32 points, so `title_bar_crop` is 64.
+- A kill at a low Y (falling off the map) ignores invincibility. An autopilot that warps the hero (a stuck rescue) can drop it through the world. Keep a floor guard that warps back to the last good navmesh position, only warp onto `NavMesh.SamplePosition` points, and make the harness print a "failed" cue and not the end cue when the lose scene loads.
+- A level that ends when the last enemy dies will load the win scene in the middle of your show: the pilot must not kill the last enemy.
+- A fixed seed does not make a Unity run play the same way twice. Schedule the key beat (here, a cover duck) by time after the start of gameplay, and print cues around it so the edit's `teaser.cue` can centre on it.
+- Frames can be checked without OBS and without `screencapture` (often blocked) by having the game save its own screenshots under a dev env variable.
+- Game audio may be quiet in the recording (mean about -35 to -45 dB for this game); check it with `volumedetect` and tell the user.
