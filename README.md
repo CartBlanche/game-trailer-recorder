@@ -1,6 +1,6 @@
 # game-trailer-recorder
 
-Let your game film its own trailer. A small dev-only "autopilot" in the game plays a scripted match and prints timestamped cue lines; this toolkit starts one copy of the game per player, records every window through OBS, cuts between the scenes automatically from the cues, and edits the result with ffmpeg (title card, teaser, dead time removed). Every take is repeatable: change the game, run one command, get a new video, with the game's own sound.
+Let your game film its own trailer. A small dev-only "autopilot" in the game plays a scripted match and prints timestamped cue lines; this toolkit starts one copy of the game per player (for multiplayer), records every window through OBS, cuts between the scenes automatically from the cues, and edits the result with ffmpeg (title card, teaser, dead time removed). Every take is repeatable: change the game, run one command, get a new video, with the game's own sound.
 
 It is packaged as an agent skill ([`SKILL.md`](SKILL.md), in the Claude Code skill format) so an AI agent can set it up in your game, but the scripts are ordinary Python and work without one.
 
@@ -24,8 +24,8 @@ Nothing in the recording or edit side knows it is filming a game. It starts a pr
 - ffmpeg and ffprobe (install notes below).
 - Python 3.9 or later (standard library only).
 - Chrome, for the title card.
-- A game you can build with a dev switch, and that can run several copies side by side.
-- Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent. Windows and Linux are untested.
+- A game you can build with a dev switch, and that can run several copies side by side (for multiplayer).
+- Tested only on macOS, with MonoGame (C#) games and one Unity game, and only with Claude as the agent. Windows and Linux are currently untested, but should work or will work with minor changes.
 - Other engines need their own harness (the contract is engine independent).
 
 ### Installing OBS
@@ -77,6 +77,14 @@ The scripts do not care what engine the game uses; only the in-game autopilot is
 ## Status
 
 Used for four games so far: a four-player LAN shooter, a two-player LAN artillery game and a one-window AI demo (all MonoGame), and a Unity first person shooter (one real recording). Expect to need about ten takes for a polished trailer; [`references/pitfalls.md`](references/pitfalls.md) lists the mistakes that cost the most. Ideas not built: music in the edit, portrait output, Windows and Linux notes.
+
+## Made with this skill
+
+If you've used this skill to record your game or app trailer, submit a PR and we'll add it to the list. It could help promote your own game.
+
+| Name | 16x9 | 9x16 |
+|---|---|---|
+| [Royal Flush Rush](https://softsavage.itch.io/royal-flush-rush) | https://www.youtube.com/watch?v=O97HEFKR-Xo | https://www.youtube.com/shorts/92vRQbH4C5Q |
 
 ## Licence
 
